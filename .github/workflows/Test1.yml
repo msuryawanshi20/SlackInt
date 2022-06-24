@@ -36,13 +36,6 @@ jobs:
    
     - name: Slack Notification Test
       uses: act10ns/slack@v1
-       with:
-	 status: ${{job.status}}
-	 steps: ${{toJson(steps)}}
-	 channel: '#slackdemoapp-channel'
-	 
-    - name: Slack Notification Test
-      uses: act10ns/slack@v1
       if: ${{ always() }}
       with:	 
        status: ${{job.status}}
