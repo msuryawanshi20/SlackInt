@@ -1,0 +1,44 @@
+name: Slakc_NewTest
+
+on: 
+  workflow_dispatch:
+    inputs:
+        
+      TestEnv:
+        type: choice
+        description: Please select environment
+        options: 
+        - AutomationOrg 
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env: 
+       PROVAR_HOME: ${{ github.workspace }}/ProvarHome
+	   SLACK_WEBHOOK_URL:${{ secrets.SLACK_WEBHOOK_URL}}
+    
+	steps:
+    - name: Get current date
+      id: date
+      run: echo "::set-output name=date::$(date +'%Y-%m-%dT%H_%M_%S')"
+                                         
+    - uses: actions/checkout@v2
+    - name: Set up JDK 8
+      uses: actions/setup-java@v2
+      with:
+        distribution: 'adopt'
+        java-version: 8
+     
+    - name: Execute Test Plan-${{github.event.inputs.plan}}
+      run: |
+        echo "Selected Environment is="${{ github.event.inputs.TestEnv }}
+   
+	- name: Slack Notification Test
+	  uses: act10ns/slack@v1
+	  with:
+		status: ${{job.status}}
+		steps: ${{toJson(steps)}}
+		channel: '#slackdemoapp-channel'
+      if: ${{ always() }}
+   	   
