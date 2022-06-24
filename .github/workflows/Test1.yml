@@ -16,9 +16,9 @@ jobs:
 
     env: 
        PROVAR_HOME: ${{ github.workspace }}/ProvarHome
-	   SLACK_WEBHOOK_URL:${{ secrets.SLACK_WEBHOOK_URL}}
+       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL}}
     
-	steps:
+    steps:
     - name: Get current date
       id: date
       run: echo "::set-output name=date::$(date +'%Y-%m-%dT%H_%M_%S')"
@@ -34,11 +34,17 @@ jobs:
       run: |
         echo "Selected Environment is="${{ github.event.inputs.TestEnv }}
    
-	- name: Slack Notification Test
-	  uses: act10ns/slack@v1
-	  with:
-		status: ${{job.status}}
-		steps: ${{toJson(steps)}}
-		channel: '#slackdemoapp-channel'
+    - name: Slack Notification Test
+      uses: act10ns/slack@v1
+       with:
+	 status: ${{job.status}}
+	 steps: ${{toJson(steps)}}
+	 channel: '#slackdemoapp-channel'
+	 
+    - name: Slack Notification Test
+      uses: act10ns/slack@v1
       if: ${{ always() }}
-   	   
+      with:	 
+       status: ${{job.status}}
+       steps: ${{toJson(steps)}}
+       channel: '#slackdemoapp-channel'
